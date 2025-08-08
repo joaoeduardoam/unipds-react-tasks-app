@@ -1,6 +1,7 @@
 import Link from "next/link";
-import FormRegister from "../components/FormRegister";
+import { FormRegister } from "../components/FormRegister";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
 
 export default function Register() {
@@ -8,9 +9,9 @@ export default function Register() {
     "use server";
 
 
-    const username = formData.get("username");
-    const email = formData.get("email");
-    const password = formData.get("password");
+    const username = formData.get("username")?.toString();
+    const email = formData.get("email")?.toString();
+    const password = formData.get("password")?.toString();
 
 
     if(!username || !email || !password){
@@ -44,17 +45,31 @@ export default function Register() {
       const {token, message} = await res.json();
 
       if(!token){
+
         return message;      
+
       }else{
-        // redirect("/tasks");
+        console.log("User registered successfully!", token);
+
+        const cookieStore = await cookies();
+        
+        cookieStore.set("token", token, {
+          httpOnly: true,
+          path: "/",
+          secure: true,
+          maxAge: 60 * 60 * 24,
+        });
+        
       }
-  
+    
 
     }catch(e){
       console.error("User register error : ", e);
 
       return "User register error!";
     }    
+
+    redirect("/tasks");
     
   }
 
