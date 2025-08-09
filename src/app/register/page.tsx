@@ -2,7 +2,14 @@ import Link from "next/link";
 import { FormRegister } from "../components/FormRegister";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import { Metadata } from "next";
 
+
+const PAGE_TITLE = "Register";
+
+export const metadata: Metadata = {
+  title: PAGE_TITLE
+};
 
 export default function Register() {
   const handleRegister = async (_: string, formData: FormData) => {
@@ -77,7 +84,7 @@ export default function Register() {
   return (
     <div className="grid gap-y-6 bg-[#fdfcfc] px-8 py-12 rounded-3xl min-w-100">
       
-      <h1 className="text-4xl text-center font-bold">Register</h1>
+      <h1 className="text-4xl text-center font-bold">{PAGE_TITLE}</h1>
 
       <FormRegister action={handleRegister}/>
 

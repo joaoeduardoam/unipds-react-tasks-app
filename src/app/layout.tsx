@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Link from "next/link";
 
+const PAGE_TITLE = "Tasks App";
+
 export const metadata: Metadata = {
-  title: "Tasks App",
+  title: { template: `${PAGE_TITLE} | %s`, default: PAGE_TITLE }
   // description: "",
 };
 
