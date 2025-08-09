@@ -1,8 +1,10 @@
 import Link from "next/link";
-import { FormRegister } from "../components/FormRegister";
+import { FormRegister } from "../../components/FormRegister";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { Metadata } from "next";
+import { checkInvalidEmail, checkInvalidPassword } from "@/lib/utils";
+import { COOKIE_OPTIONS } from "@/constants/constants";
 
 
 const PAGE_TITLE = "Register";
@@ -25,11 +27,10 @@ export default function Register() {
       return "Fill all fields!";      
     }
 
-    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    if(checkInvalidEmail(email)){
       return "Invalid email!";
     }
-
-    if(password.length < 6){
+    if(checkInvalidPassword(password)){
       return "Password must be at least 6 characters long!";
     }
 
@@ -41,7 +42,7 @@ export default function Register() {
         password,
       };
 
-      const res = await fetch("http://localhost:3000/auth/register", {
+      const res = await fetch(`${process.env.BACKEND_URL}/auth/register`, {
         method: "POST",
         body: JSON.stringify(body),
         headers: {
@@ -60,12 +61,7 @@ export default function Register() {
 
         const cookieStore = await cookies();
         
-        cookieStore.set("token", token, {
-          httpOnly: true,
-          path: "/",
-          secure: true,
-          maxAge: 60 * 60 * 24,
-        });
+        cookieStore.set("token", token, COOKIE_OPTIONS);
         
       }
     
@@ -82,7 +78,7 @@ export default function Register() {
 
 
   return (
-    <div className="grid gap-y-6 bg-[#fdfcfc] px-8 py-12 rounded-3xl min-w-100">
+    <>
       
       <h1 className="text-4xl text-center font-bold">{PAGE_TITLE}</h1>
 
@@ -90,6 +86,6 @@ export default function Register() {
 
       <Link className="text-center underline" href="/login">I'm already registered</Link>
 
-    </div>
+    </>
   );
 }
