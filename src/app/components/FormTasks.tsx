@@ -1,8 +1,6 @@
 'use client';
 
-import { FC, useActionState, useState } from "react";
-import { FormInput } from "./FormInput";
-import { FormButton } from "./FormButton";
+import { FC, use, useActionState, useEffect, useState } from "react";
 import { FormError } from "./FormError";
 
 type FormTasksProps = {
@@ -17,6 +15,13 @@ export const FormTasks: FC<FormTasksProps> = ({action}) => {
 
   console.log(errorMessage);
 
+  useEffect(() => {
+    if(!errorMessage && !isPending){
+      setTask('');
+    }
+  }, [errorMessage, isPending]);
+
+  
   return (
     <>
       {!isPending && <FormError message={errorMessage}/>}
